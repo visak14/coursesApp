@@ -40,9 +40,9 @@ const adminLoading = useRecoilValue(isAdminLoading)
   
           <div style={{display: "flex"}}>
               <div style={{marginRight: 10, display: "flex"}}>
-                   <div>
+                   {/* <div>
                     <img src="../public/ShoppingTrolley.png" alt="" height='40px' />
-                    </div> 
+                    </div>  */}
 
                   <div style={{marginRight: 10}}>
                       <Button
