@@ -7,6 +7,41 @@ const jwt = require('jsonwebtoken');
 const { SECRET } = require("../middleware/auth")
 const { authenticateJwt } = require("../middleware/auth");
 
+const { z } = require('zod');
+
+let usernameInputProps = z.object({
+    username: z.string().min(1).email(),
+    password: z.string().min(1)
+})
+router.post('/signup', (req, res)  =>{
+    const parsedInput = usernameInputProps.safeParse(req.body)
+    if(!parsedInput.success) {
+        return res.status(411).json({
+            msg: parsedInput.error
+        })
+        return;
+    }
+    let username = parsedInput.data.username;
+    let password = parsedInput.data.password
+    
+    function callback(user){
+        if(user){
+            res.status(403).json({message: 'user already exist'})
+        }
+        else {
+            const obj  = {username: username, password: password}
+            const newUser  =  new User(obj)
+             newUser.save()
+             const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
+             res.json({message:'User created successfully', token})
+
+        }   
+        
+    }
+
+    Admin.findOne({username}).then(callback)
+})
+
 router.get("/u", authenticateJwt, async (req, res) => {
   const user= await User.findOne({ username: req.user.username });
   if (!user) {
@@ -18,18 +53,18 @@ router.get("/u", authenticateJwt, async (req, res) => {
   })
 });
 
-router.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
-    if (user) {
-      res.status(403).json({ message: 'User already exists' });
-    } else {
-      const newUser = new User({ username, password });
-      await newUser.save();
-      const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
-      res.json({ message: 'User created successfully', token });
-    }
-  });
+// router.post('/signup', async (req, res) => {
+//     const { username, password } = req.body;
+//     const user = await User.findOne({ username });
+//     if (user) {
+//       res.status(403).json({ message: 'User already exists' });
+//     } else {
+//       const newUser = new User({ username, password });
+//       await newUser.save();
+//       const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
+//       res.json({ message: 'User created successfully', token });
+//     }
+//   });
 
   router.get('/courses', authenticateJwt, async (req, res) => {
     const courses = await Course.find({published: true});

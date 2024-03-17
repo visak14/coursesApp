@@ -7,6 +7,44 @@ const jwt = require('jsonwebtoken');
 const { SECRET } = require("../middleware/auth")
 const { authenticateJwt } = require("../middleware/auth");
 
+
+const { z } = require('zod');
+
+let usernameInputProps = z.object({
+    username: z.string().min(1).email(),
+    password: z.string().min(1)
+})
+
+
+router.post('/signup', (req, res)  =>{
+    const parsedInput = usernameInputProps.safeParse(req.body)
+    if(!parsedInput.success) {
+        return res.status(411).json({
+            msg: parsedInput.error
+        })
+        return;
+    }
+    let username = parsedInput.data.username;
+    let password = parsedInput.data.password
+    
+    function callback(admin){
+        if(admin){
+            res.status(403).json({message: 'Admin already exist'})
+        }
+        else {
+            const obj  = {username: username, password: password}
+            const newAdmin  =  new Admin(obj)
+             newAdmin.save()
+             const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
+             res.json({message:'Admin created successfully', token})
+
+        }   
+        
+    }
+
+    Admin.findOne({username}).then(callback)
+})
+
 router.get("/me", authenticateJwt, async (req, res) => {
   const admin = await Admin.findOne({ username: req.user.username });
   if (!admin) {
@@ -18,23 +56,6 @@ router.get("/me", authenticateJwt, async (req, res) => {
   })
 });
 
-router.post('/signup', (req, res) => {
-  const { username, password } = req.body;
-  function callback(admin) {
-    if (admin) {
-      res.status(403).json({ message: 'Admin already exists' });
-    } else {
-      const obj = { username: username, password: password };
-      const newAdmin = new Admin(obj);
-      newAdmin.save();
-
-      const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
-      res.json({ message: 'Admin created successfully', token });
-    }
-
-  }
-  Admin.findOne({ username }).then(callback);
-});
 
 router.post('/login',  async (req, res) => {
   const { username, password } = req.headers;
