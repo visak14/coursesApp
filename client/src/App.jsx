@@ -18,6 +18,7 @@ import Landing from "./Landing";
 import Course from "./Course";
 import AdminSignup from "./AdminSignup";
 import UserSignup from "./UserSignup";
+import PaymentSuccess from "./PaymentSuccess";
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
         <Route path="/course/:courseId" element={<Course/>}/>
         <Route path="/adminsignup" element={<AdminSignup/>}/>
         <Route path="/usersignup" element={<UserSignup/>}/>
+        <Route path="/paymentsuccess" element={<PaymentSuccess/>}/>
       </Routes>
      </Router>
     </RecoilRoot>

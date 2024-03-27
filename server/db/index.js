@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+
 
 
 const userSchema = new mongoose.Schema(
@@ -12,6 +13,7 @@ const userSchema = new mongoose.Schema(
   const adminSchema = new mongoose.Schema({
     username: String,
     password: String,
+    
   }
   );
   
@@ -25,13 +27,34 @@ const userSchema = new mongoose.Schema(
 
   })
 
+  const paymentSchema = new mongoose.Schema({
+   razorpay_order_id: {
+    type: String,
+    required: true,
+   },
+   razorpay_payment_id : {
+    
+      type: String,
+      required: true,
+     },
+   
+   razorpay_signature:  
+   {
+    type: String,
+    required: true,
+   }
+  
+  })
+
   const Admin = mongoose.model('Admin',adminSchema)
   const  User = mongoose.model('User', userSchema)
   const Course = mongoose.model('Course', courseSchema)
+  const payment = mongoose.model('payment',paymentSchema)
 
 
   module.exports = {
     Admin,
     User,
-    Course
+    Course,
+    payment
   }

@@ -36,6 +36,8 @@ function Courses() {
     </div>
 }
 
+let extractkey
+let extractorder
 export function Course({course}) {
     const navigate = useNavigate();
     const userEmail = useRecoilValue(userEmailState);
@@ -52,7 +54,44 @@ export function Course({course}) {
             <Typography textAlign={"center"} variant="h5">Rs/-{course.price}</Typography>
             <div style={{display: "flex", justifyContent: "center", marginTop: 20}}>
                 <Button variant="contained" size="large"
-                >purchase</Button>
+                onClick={() =>{
+                  axios.get('http://localhost:3000/user/checkout/getkey').then(res =>{
+                    const{data} = res
+                    const {key} = data
+                    extractkey  = key
+                    
+                  })
+                  axios.post("http://localhost:3000/user/checkout",{ amount : course.price}).then(res =>{
+                    const {data} = res
+                    const {order} = data
+                    extractorder = order
+                  })
+
+                    const options  = {
+                        key : extractkey , // Enter the Key ID generated from the Dashboard
+                        amount: extractorder.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        currency: "INR",
+                        name: "vishal keshri",
+                        description: "Test Transaction",
+                        image: "https://example.com/your_logo",
+                        order_id: extractorder.id, 
+                        callback_url: 'http://localhost:3000/user/checkout/paymentverification',
+                        prefill: {
+                            "name": "Gaurav Kumar",
+                            "email": "gaurav.kumar@example.com",
+                            "contact": "9000090000"
+                        },
+                        notes: {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        theme: {
+                            "color": "#3399cc"
+                        }
+                    };
+                    const razor  = new window.Razorpay(options)
+                     razor.open()
+                }}> purchase</Button>
+                
             </div>
         </Card>
     }
