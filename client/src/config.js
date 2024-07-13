@@ -1,1 +1,1 @@
-export const BASE_URL = 'courses-app-api.vercel.app';
+export const BASE_URL = 'https://courses-app-api.vercel.app';
