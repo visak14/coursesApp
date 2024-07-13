@@ -18,7 +18,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cors(
   {
-  origin: ["https://courses-app-frontend-lgfb5tkip-visak14s-projects.vercel.app"],
+  origin: ["https://courses-app-frontend.vercel.app"],
   methods: ["POST", "GET", "PUT", "PATCH" ],
   credentials: true
   }
