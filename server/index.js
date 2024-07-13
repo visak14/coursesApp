@@ -16,12 +16,20 @@ const userRouter = require('./routes/user')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use(cors(
-  {
-  origin: "https://courses-app-frontend.vercel.app"
-  
-  }
-))
+const allowedOrigins = ['https://courses-app-frontend.vercel.app'];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use('/admin', adminRouter)
 app.use('/user',userRouter)
 
