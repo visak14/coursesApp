@@ -16,6 +16,9 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cors())
+app.use(cors({
+    origin: 'https://vercel.com/visak14s-projects/courses-app-frontend'
+  }));
 app.use('/admin', adminRouter)
 app.use('/user',userRouter)
 
