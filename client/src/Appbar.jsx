@@ -44,6 +44,15 @@ const adminLoading = useRecoilValue(isAdminLoading)
                     <img src="../public/ShoppingTrolley.png" alt="" height='40px' />
                     </div>  */}
 
+{/* <div style={{marginRight: 10}}>
+                      <Button
+                          onClick={() => {
+                              navigate("/courses")
+                          }}
+                      >Purchesed Courses</Button>
+                  </div> */}
+
+
                   <div style={{marginRight: 10}}>
                       <Button
                           onClick={() => {
