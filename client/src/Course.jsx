@@ -7,6 +7,7 @@ import {Loading} from "./Loading";
 import { courseState } from "./store/atoms/course";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import { courseTitle, coursePrice, isCourseLoading, courseImage } from "./store/selectors/course";
+import { BASE_URL } from "./config";
 
 function Course() {
     let { courseId } = useParams();
@@ -14,7 +15,7 @@ function Course() {
     const courseLoading = useRecoilValue(isCourseLoading);
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/admin/course/${courseId}`, {
+        axios.get(`${BASE_URL}/admin/course/${courseId}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token")
@@ -115,7 +116,7 @@ function UpdateCard() {
             <Button
                 variant="contained"
                 onClick={async () => {
-                    axios.put(`http://localhost:3000/admin/courses/` + courseDetails.course._id, {
+                    axios.put(`${BASE_URL}/admin/courses/` + courseDetails.course._id, {
                         title: title,
                         description: description,
                         imageLink: image,

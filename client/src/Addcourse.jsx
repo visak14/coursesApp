@@ -1,6 +1,7 @@
 import { Button } from '@mui/base'
 import { Card, TextField} from '@mui/material'
 import  { useState } from 'react'
+import { BASE_URL } from './config'
 
 const Addcourse = () => {
     const [title , setTitle] = useState("")
@@ -61,7 +62,7 @@ const Addcourse = () => {
            function callback1(res) {
             res.json().then(callback2)
            }
-            fetch ('http://localhost:3000/admin/courses', {
+            fetch (`${BASE_URL}/admin/courses`, {
                 method: 'POST',
                 body: JSON.stringify({
                   title: title,

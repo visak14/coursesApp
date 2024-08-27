@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { userEmailState } from "./store/selectors/userEmail";
+import { BASE_URL } from "./config";
 
 
 function Courses() {
@@ -11,7 +12,7 @@ function Courses() {
     
 
     const init = async () => {
-        const response = await axios.get(`http://localhost:3000/admin/courses/`, {
+        const response = await axios.get(`${BASE_URL}/admin/courses/`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
@@ -55,13 +56,13 @@ export function Course({course}) {
             <div style={{display: "flex", justifyContent: "center", marginTop: 20}}>
                 <Button variant="contained" size="large"
                 onClick={() =>{
-                  axios.get('http://localhost:3000/user/checkout/getkey').then(res =>{
+                  axios.get(`${BASE_URL}/user/checkout/getkey`).then(res =>{
                     const{data} = res
                     const {key} = data
                     extractkey  = key
                     
                   })
-                  axios.post("http://localhost:3000/user/checkout",{ amount : course.price}).then(res =>{
+                  axios.post(`${BASE_URL}/user/checkout`,{ amount : course.price}).then(res =>{
                     const {data} = res
                     const {order} = data
                     extractorder = order
@@ -75,7 +76,7 @@ export function Course({course}) {
                         description: "Test Transaction",
                         image: "https://example.com/your_logo",
                         order_id: extractorder.id, 
-                        callback_url: 'http://localhost:3000/user/checkout/paymentverification',
+                        callback_url: `${BASE_URL}/user/checkout/paymentverification',
                         prefill: {
                             "name": "Gaurav Kumar",
                             "email": "gaurav.kumar@example.com",
