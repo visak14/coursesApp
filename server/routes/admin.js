@@ -27,18 +27,18 @@ router.post('/signup', (req, res)  =>{
     let username = parsedInput.data.username;
     let password = parsedInput.data.password
     
-    function callback(admin){
-        if(admin){
-            res.status(403).json({message: 'Admin already exist'})
-        }
-        else {
-            const obj  = {username: username, password: password}
-            const newAdmin  =  new Admin(obj)
-             newAdmin.save()
-             const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
-             res.json({message:'Admin created successfully', token})
-
-        }   
+    function callback(admin) {
+      if (admin) {
+          res.status(403).json({ message: 'Admin already exists' });
+      } else {
+          const obj = { username: username, password: password };
+          const newAdmin = new Admin(obj);
+          newAdmin.save();
+          const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
+          res.json({ message: 'Admin created successfully', token });
+      }
+  }
+  
         
     }
 
