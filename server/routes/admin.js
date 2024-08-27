@@ -40,7 +40,6 @@ router.post('/signup', (req, res)  =>{
   }
   
         
-    }
 
     Admin.findOne({username}).then(callback)
 })
