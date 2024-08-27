@@ -75,15 +75,25 @@ router.get("/u", authenticateJwt, async (req, res) => {
 
 
   router.post('/login', async (req, res) => {
-    const { username, password } = req.headers;
-    const user = await User.findOne({ username, password });
-    if (user) {
-      const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
-      res.json({ message: 'Logged in successfully', token });
-    } else {
-      res.status(403).json({ message: 'Invalid username or password' });
+    try {
+      console.log('Request body:', req.body);
+      const { username, password } = req.body;
+      const user = await User.findOne({ username });
+      
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
+        res.json({ message: 'Logged in successfully', token });
+      } else {
+        console.log('Invalid login attempt:', { username, password });
+        res.status(403).json({ message: 'Invalid username or password' });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
   });
+  
+  
   
   router.get('/courses', authenticateJwt, async (req, res) => {
     const courses = await Course.find({published: true});

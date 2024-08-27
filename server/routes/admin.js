@@ -56,14 +56,24 @@ router.get("/me", authenticateJwt, async (req, res) => {
 });
 
 
-router.post('/login',  async (req, res) => {
-  const { username, password } = req.headers;
-  const admin = await Admin.findOne({ username, password });
-  if (admin) {
-    const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
-    res.json({ message: 'Logged in successfully', token });
-  } else {
-    res.status(403).json({ message: 'Invalid username or password' });
+router.post('/login', async (req, res) => {
+  const parsedInput = usernameInputProps.safeParse(req.body);
+  if (!parsedInput.success) {
+      return res.status(411).json({ msg: parsedInput.error });
+  }
+
+  const { username, password } = parsedInput.data;
+
+  try {
+      const admin = await Admin.findOne({ username, password });
+      if (admin) {
+          const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
+          res.json({ message: 'Logged in successfully', token });
+      } else {
+          res.status(403).json({ message: 'Invalid username or password' });
+      }
+  } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
