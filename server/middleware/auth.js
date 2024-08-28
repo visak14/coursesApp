@@ -10,8 +10,14 @@ const authenticateJwt = (req, res, next) => {
         console.error('Token verification failed:', err);  
         return res.status(403).json({ message: 'Forbidden: Invalid or expired token' });
       }
+
+      if(user.role !== 'admin') {
+        return res.status(403).json({message: 'Forbiden : Insufficient permisssion'})
+      }
       req.user = user;
       next();
+
+      
     });
   } else {
     return res.status(401).json({ message: 'Unauthorized: No token provided' });
