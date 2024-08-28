@@ -81,10 +81,16 @@ router.post('/login', async (req, res) => {
 
  
 router.post('/courses', authenticateJwt, async (req, res) => {
-  const course = new Course(req.body);
-  await course.save();
-  res.json({ message: 'Course created successfully', courseId: course.id });
+  try {
+    const course = new Course(req.body);
+    await course.save();
+    res.json({ message: 'Course created successfully', courseId: course.id });
+  } catch (error) {
+    console.error('Error creating course:', error);  // Log the error for debugging
+    res.status(500).json({ message: 'Internal server error' });  // Return a consistent error response
+  }
 });
+
 
 
 router.put('/courses/:courseId', authenticateJwt, async (req, res) => {

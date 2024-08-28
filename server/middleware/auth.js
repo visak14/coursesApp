@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const SECRET = 'SECr3t';  // This should be in an environment variable in a real application
+const SECRET ='SECr3t'; 
 
 const authenticateJwt = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -7,17 +7,18 @@ const authenticateJwt = (req, res, next) => {
     const token = authHeader.split(' ')[1];
     jwt.verify(token, SECRET, (err, user) => {
       if (err) {
-        return res.sendStatus(403);
+        console.error('Token verification failed:', err);  
+        return res.status(403).json({ message: 'Forbidden: Invalid or expired token' });
       }
       req.user = user;
       next();
     });
   } else {
-    res.sendStatus(401);
+    return res.status(401).json({ message: 'Unauthorized: No token provided' });
   }
 };
 
 module.exports = {
-    authenticateJwt,
-    SECRET
-}
+  authenticateJwt,
+  SECRET
+};
