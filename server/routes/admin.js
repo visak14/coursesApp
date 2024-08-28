@@ -58,9 +58,9 @@ router.get("/me", authenticateJwt, async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;  // Change to body
-  const user = await User.findOne({ username });
-  if (user && user.password === password) {  // Simplified for demonstration; use hashed comparison
-      const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
+  const admin = await User.findOne({ username });
+  if (admin && admin.password === password) {  // Simplified for demonstration; use hashed comparison
+      const token = jwt.sign({ username: admin.username, role: 'admin' }, SECRET, { expiresIn: '1h' });
       res.json({ message: 'Logged in successfully', token });
   } else {
       res.status(403).json({ message: 'Invalid username or password' });
